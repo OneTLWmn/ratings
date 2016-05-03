@@ -54,10 +54,13 @@ def load_movies():
         
         # The date comes as string from file: 01-Jan-1995
         # change it to a datetime object
+        
         if release_str:
-            release_at = datetime.strptime(release_str, '%d-%b-%Y')
+
+            release_at = datetime.strptime(release_str, "%d-%b-%Y")
         else:
             release_at = None
+       
 
         # Sets up each movie as an instance of the Movie class
         # (which will become a record in our movies table)     
@@ -79,7 +82,6 @@ def load_ratings():
     # Delete all rows in table, so if we need to run this a second time,
     # we won't be trying to add duplicate users
     Rating.query.delete()
-    set_val_user_id()
     for row in open("seed_data/u.data"):
         user_id, movie_id, score, timestamp = row.strip().split()
 

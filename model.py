@@ -44,7 +44,8 @@ class Movie(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<User movie_id=%s title=%s release_at=%s imbd_url=%s>" % (self.movie_id, self.title, self.release_at, self.imbd_url)
+        return ("<User movie_id=%s title=%s release_at=%s imdb_url=%s>" 
+            % (self.movie_id, self.title, self.release_at, self.imdb_url))
 
 
 class Rating(db.Model):
