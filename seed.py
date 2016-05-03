@@ -1,13 +1,13 @@
 """Utility file to seed ratings database from MovieLens data in seed_data/"""
 
 from sqlalchemy import func
-from model import User
+from model import User, Movie
 # from model import Rating
 # from model import Movie
 
 from model import connect_to_db, db
 from server import app
-
+from datetime import datetime
 
 def load_users():
     """Load users from u.user into database."""
@@ -21,7 +21,7 @@ def load_users():
     # Read u.user file and insert data
     for row in open("seed_data/u.user"):
         row = row.rstrip()
-        user_id, age, gender, occupation, zipcode = row.split("|")
+        user_id, age, gender, occupation, zipcode = row.split("|")[0:5]
 
         user = User(user_id=user_id,
                     age=age,
@@ -37,6 +37,40 @@ def load_users():
 def load_movies():
     """Load movies from u.item into database."""
 
+    print "Movies"
+
+    # Delete all rows in table, so if we need to run this a second time,
+    # we won't be trying to add duplicate users
+    Movie.query.delete()
+
+    # Read u.item file and insert data into movies table
+    # emptyPipe is an variable with an empty value, because we split on 
+    # a pipe and there was a double pipe before the imdb url
+    for row in open("seed_data/u.item"):
+        row = row.rstrip()
+        movie_id, title, release_str, emptyPipe, imdb_url = row.split("|")[0:5]
+        
+        # removing unecessary year from title it's redundant
+        title = title.split(" (")[0]
+        
+        # The date comes as string from file: 01-Jan-1995
+        # change it to a datetime object
+        if release_str:
+            release_at = datetime.strptime(release_str, '%d-%b-%Y')
+        else:
+            release_at = None
+
+        # Sets up each movie as an instance of the Movie class
+        # (which will become a record in our movies table)     
+        movie = Movie(movie_id=movie_id,
+                    title = title,
+                    release_at = release_at,
+                    imdb_url = imdb_url)
+     # We need to add to the session or it won't ever be stored
+        db.session.add(movie)
+
+    # Once we're done, we should commit our work
+    db.session.commit()
 
 def load_ratings():
     """Load ratings from u.data into database."""
