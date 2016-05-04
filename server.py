@@ -27,40 +27,30 @@ def index():
     return render_template("homepage.html")
 
 
+@app.route('/process_login', methods=['GET', 'POST'])
+def login():
+    """Users login template"""
+
+    email = request.form["user-email"]
+    password = request.form["user-password"]
+    print "\n\n\n\n &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+    print ("password: ", password)
+    print ("email: ", email)
+    print "\n\n\n\n &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"  
+    #check for value yes/no of response; set true if yes;
+    #false if no
+    user = User.query.filter_by(email = email).all()
+    
+    flash('You were successfully logged in')
+    
+    return render_template("query_page.html")
+    
 @app.route('/users')
 def user_list():
     """Show list of users"""
 
     users = User.query.all()
     return render_template('user_list.html', users=users)
-
-@app.route('/login_form', methods=['GET', 'POST'])
-def login():
-    """Users login template"""
-
-    return render_template('user_login_form.html')
-
-
-@app.route('/process_login', methods=['GET', 'POST'])
-def process_login():
-    #args returned as dictionary from the form
-    #pulling each and binding to variables for query to db
-    email = request.form["user-email"]
-    password = request.form["user-password"]
-    
-    #Debugging prints
-    # print (type(request.form))
-    # print("Email: ", email) 
-    # print("Password: ", password)
-    
-    # query the db-ratings for existence of the user
-    
-    user = User.query.filter_by(email = email).all()
-
-    
-        # print
-    return render_template("homepage.html")
-
 
 
 if __name__ == "__main__":
