@@ -1,11 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Ratings</h1>
 
-<h2>Movies</h2>
-<p> <a href="/movies">View all movies</a></p>
+<form action="/process_login" method="POST" id="process-login-form">
+    <p>First time users this will create your login.
+    Returning users this form will log you into the system.
+    </p>
+    <label for="email">Email</label>
+    <input type="email" name="user-email" placeholder="user@gamil.com">
+    <label for="password">Password</label>
+    <input type="password" name="user-password">
+    <input type="submit" value="log in">
+</form>
 
-<h2>Users</h2>
-<p><a href="/users">View all users</a></p>
-
-{% endblock %}
+{% endblock %} 

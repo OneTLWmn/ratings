@@ -34,32 +34,55 @@ def user_list():
     users = User.query.all()
     return render_template('user_list.html', users=users)
 
-@app.route('/login_form', methods=['GET', 'POST'])
-def login():
-    """Users login template"""
-
-    return render_template('user_login_form.html')
-
 
 @app.route('/process_login', methods=['GET', 'POST'])
 def process_login():
+    """
+    user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    email = db.Column(db.String(64), nullable=True)
+    password = db.Column(db.String(64), nullable=True)
+    age = db.Column(db.Integer, nullable=True)
+    zipcode = db.Column(db.String(15), nullable=True)
+    """
+
     #args returned as dictionary from the form
     #pulling each and binding to variables for query to db
     email = request.form["user-email"]
     password = request.form["user-password"]
     
-    #Debugging prints
-    # print (type(request.form))
-    # print("Email: ", email) 
-    # print("Password: ", password)
-    
     # query the db-ratings for existence of the user
-    
-    user = User.query.filter_by(email = email).all()
+    # .first() will give us the first record as an object (all the fields in db) 
+    # if it exist if not None
+    # had we done .all it would have returned an object with all the matched
+    # records and you would access each row using index id
+    user = User.query.filter_by(email = email).first()
+ 
+    if not user:
+        #add the user to the site
+        flash('User does not exist yet. You have been registered.')
+
+        #Create the object with attributes of email and password; for now we are leaving 
+        #age and zip as null; then add the new user record to the DB and commit it
+        
+        newUser = User(email=email, password=password)
+        db.session.add(newUser)
+        db.session.commit()
+    else:
+        # the user does exist, check if their password matches. 
+        # if the password doesn't match, alert user and
+        # redirect user back to the log in page.
+        if user.password != password:
+            flash('Password did not match email.  Please try again.')
+            return redirect("/")
+
 
     
-        # print
-    return render_template("homepage.html")
+    # Once new user is created or existing user logs in,
+    # create a session for the user
+    session["current_user"] = email
+    flash(session["current_user"] + ', successfully logged into the system')
+    
+    return render_template("user_query.html")
 
 
 
