@@ -27,6 +27,19 @@ def index():
     return render_template("homepage.html")
 
 
+
+@app.route('/logout')
+def logout_user():
+    """This will logout the user and redirect them to the homepage
+    Removes session variables associated with current_user"""
+
+
+    session.pop('current_user', None)
+
+    return redirect("/")
+
+
+
 @app.route('/users')
 def user_list():
     """Show list of users"""
