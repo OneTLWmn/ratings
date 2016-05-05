@@ -4,7 +4,7 @@ from jinja2 import StrictUndefined
 
 from flask import Flask, render_template, redirect, flash, session, request
 from flask_debugtoolbar import DebugToolbarExtension
-
+from sqlalchemy import desc
 from model import connect_to_db, db, User, Movie, Rating
 
 
@@ -104,7 +104,8 @@ def process_login():
     
 
     # print "########################### user.ratings", user.ratings.movie_id
-    return redirect("/")
+    
+    return redirect("/user/%s" % user.user_id)
 
 @app.route("/user/<int:user_id>")
 def user_details(user_id):
@@ -112,6 +113,15 @@ def user_details(user_id):
     user = User.query.get(user_id)
 
     return render_template("profile.html", user=user)
+
+@app.route("/movies/<int:movie_id>")
+def movie_lists(movie_id):
+
+    movies = Movie.query.all()
+
+
+    return render_template("movie_list.html", movies=movies)
+
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point

@@ -3,20 +3,20 @@
 
 <h2>{{ user.email }} Profile</h2>
 <ul>
-    <li>{{ user.age }}</li>
-    <li>{{ user.zipcode }}</li>
+    <li>Age: {{ user.age }}</li>
+    <li>Zip Code: {{ user.zipcode }}</li>
 </ul>
-
+<h3> Movie Titles</h3>
 <ul>
     {% for rating in user.ratings %}
         <li>
 
-            {{ rating.movie.title }}
+           {{ rating.movie.title }}
            
         </li>
     {% endfor %}
 </ul>
 
 
-
+<p><button name="logout"><a href="/logout">LOG OUT</a></button></p>
 {% endblock %}
