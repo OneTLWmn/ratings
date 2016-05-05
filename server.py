@@ -48,6 +48,7 @@ def user_list():
     return render_template('user_list.html', users=users)
 
 
+
 @app.route('/process_login', methods=['GET', 'POST'])
 def process_login():
     """
@@ -80,6 +81,12 @@ def process_login():
         newUser = User(email=email, password=password)
         db.session.add(newUser)
         db.session.commit()
+
+        # this is a workaround for getting the new object back
+        # from the DB with user_id
+        user = User.query.filter_by(email = email).first()
+        return redirect("/")
+
     else:
         # the user does exist, check if their password matches. 
         # if the password doesn't match, alert user and
@@ -92,12 +99,19 @@ def process_login():
     
     # Once new user is created or existing user logs in,
     # create a session for the user
-    session["current_user"] = email
-    flash(session["current_user"] + ', successfully logged into the system')
+    session["current_user"] = user.user_id
+    flash(user.email + ', successfully logged into the system')
     
-    return render_template("user_query.html")
 
+    # print "########################### user.ratings", user.ratings.movie_id
+    return redirect("/")
 
+@app.route("/user/<int:user_id>")
+def user_details(user_id):
+
+    user = User.query.get(user_id)
+
+    return render_template("profile.html", user=user)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point
