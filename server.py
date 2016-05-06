@@ -114,13 +114,20 @@ def user_details(user_id):
 
     return render_template("profile.html", user=user)
 
-@app.route("/movies/<int:movie_id>")
-def movie_lists(movie_id):
+@app.route("/movies")
+def movie_lists():
 
     movies = Movie.query.all()
 
-
     return render_template("movie_list.html", movies=movies)
+
+@app.route("/movies/<int:movie_id>")
+def movie_details(movie_id):
+    """Display details about individual movie"""
+
+    movie = Movie.query.get(movie_id)
+
+    return render_template("movie_details.html", movie=movie)
 
 
 if __name__ == "__main__":

@@ -11,7 +11,7 @@
     {% for rating in user.ratings %}
         <li>
 
-           {{ rating.movie.title }}
+           <a href= "/movies/{{ rating.movie.movie_id }}">{{rating.movie.title}}</a>
            
         </li>
     {% endfor %}
